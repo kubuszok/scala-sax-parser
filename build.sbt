@@ -44,6 +44,13 @@ val publishSettings = Seq(
     if (isSnapshot.value) Some(mavenCentralSnapshots)
     else sonatypePublishToBundle.value
   },
+  sonatypeCredentialHost := "central.sonatype.com",
+  credentials ++= {
+    for {
+      username <- sys.env.get("SONATYPE_USERNAME")
+      password <- sys.env.get("SONATYPE_PASSWORD")
+    } yield Credentials("Sonatype Nexus Repository Manager", "central.sonatype.com", username, password)
+  }.toSeq,
   publishMavenStyle := true,
   Test / publishArtifact := false,
   pomIncludeRepository := { _ => false },
