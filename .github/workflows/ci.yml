@@ -1,0 +1,39 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ '*' ]
+  pull_request:
+    branches: [ master ]
+    types: [ opened, reopened, labeled, synchronize ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event.action != 'labeled'
+
+    strategy:
+      matrix:
+        scala: ['2_13', '3']
+        platform: ['jvm', 'js', 'native']
+        jvm: ['temurin:1.17.0.15']
+      fail-fast: false
+
+    name: "Scala: ${{ matrix.scala == '2_13' && '2.13' || '3' }} / Platform: ${{ matrix.platform }} / JVM: ${{ matrix.jvm }}"
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: coursier/cache-action@v8
+      - uses: coursier/setup-action@v3.0.0
+        with:
+          jvm: ${{ matrix.jvm }}
+          apps: sbt
+      - name: Install native dependencies
+        if: matrix.platform == 'native'
+        run: sudo apt-get update && sudo apt-get install -y libidn2-dev
+      - name: "Clean, compile, test"
+        run: sbt ci-${{ matrix.platform }}-${{ matrix.scala }}
