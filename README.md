@@ -24,7 +24,7 @@ Adding scala-sax-parser as a dependency alongside scala-xml makes `XML.loadStrin
 Add to your `build.sbt`:
 
 ```scala
-libraryDependencies += "io.github.scalasaxparser" %%% "scala-sax-parser" % "<version>"
+libraryDependencies += "com.kubuszok" %%% "scala-sax-parser" % "<version>"
 ```
 
 No code changes required. scala-xml's `XML.loadString()` will work on Scala.js and Scala Native automatically.
