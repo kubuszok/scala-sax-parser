@@ -77,7 +77,13 @@ lazy val root = project
   .settings(noPublishSettings)
   .settings(
     name := "scala-sax-parser-root",
-    git.useGitDescribe := true
+    git.useGitDescribe := true,
+    commands += Command.command("ci-release") { state =>
+      val extracted = Project.extract(state)
+      val tags = extracted.get(git.gitCurrentTags)
+      val cmd = if (tags.nonEmpty) "publishSigned ; sonatypeBundleRelease" else "publishSigned"
+      cmd :: state
+    }
   )
   .aggregate(saxParser.projectRefs *)
   .aggregate(tests.projectRefs *)
@@ -124,6 +130,3 @@ addCommandAlias("ci-js-2_13", "clean ; saxParserJS/compile ; testsJS/compile ; s
 addCommandAlias("ci-js-3", "clean ; saxParserJS3/compile ; testsJS3/compile ; saxParserJS3/test ; testsJS3/test")
 addCommandAlias("ci-native-2_13", "clean ; saxParserNative/compile ; testsNative/compile ; saxParserNative/test ; testsNative/test")
 addCommandAlias("ci-native-3", "clean ; saxParserNative3/compile ; testsNative3/compile ; saxParserNative3/test ; testsNative3/test")
-// ci-release is called from GitHub Actions; snapshot vs release is determined by
-// git tags via sbt-git (git.uncommittedSignifier appends -SNAPSHOT when no tag)
-addCommandAlias("ci-release", "publishSigned")
