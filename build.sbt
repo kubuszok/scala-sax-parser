@@ -42,18 +42,16 @@ val publishSettings = Seq(
   ),
   publishTo := {
     if (isSnapshot.value) Some(mavenCentralSnapshots)
-    else sonatypePublishToBundle.value
+    else localStaging.value
   },
-  sonatypeCredentialHost := "central.sonatype.com",
-  credentials ++= {
-    for {
-      username <- sys.env.get("SONATYPE_USERNAME")
-      password <- sys.env.get("SONATYPE_PASSWORD")
-    } yield Credentials("Sonatype Nexus Repository Manager", "central.sonatype.com", username, password)
-  }.toSeq,
   publishMavenStyle := true,
   Test / publishArtifact := false,
-  pomIncludeRepository := { _ => false },
+  pomIncludeRepository := {
+    _ => false
+  },
+  versionScheme := Some("early-semver"),
+  git.useGitDescribe := true,
+  git.uncommittedSignifier := None,
   // Sonatype ignores isSnapshot setting and only looks at -SNAPSHOT suffix in version:
   //   https://central.sonatype.org/publish/publish-maven/#performing-a-snapshot-deployment
   // meanwhile sbt-git used to set up SNAPSHOT if there were uncommitted changes:
@@ -81,7 +79,7 @@ lazy val root = project
     commands += Command.command("ci-release") { state =>
       val extracted = Project.extract(state)
       val tags = extracted.get(git.gitCurrentTags)
-      val cmd = if (tags.nonEmpty) "publishSigned ; sonatypeBundleRelease" else "publishSigned"
+      val cmd = if (tags.nonEmpty) "publishSigned ; sonaRelease" else "publishSigned"
       cmd :: state
     }
   )
@@ -89,6 +87,7 @@ lazy val root = project
   .aggregate(tests.projectRefs *)
 
 lazy val saxParser = (projectMatrix in file("sax-parser"))
+  .enablePlugins(GitVersioning, GitBranchPrompt)
   .settings(
     name := "scala-sax-parser",
     moduleName := "scala-sax-parser"
@@ -104,7 +103,7 @@ lazy val saxParser = (projectMatrix in file("sax-parser"))
   )
 
 lazy val tests = (projectMatrix in file("tests"))
-  .dependsOn(saxParser)
+  .enablePlugins(GitVersioning, GitBranchPrompt)
   .settings(
     name := "tests",
     libraryDependencies ++= Seq(
@@ -121,6 +120,7 @@ lazy val tests = (projectMatrix in file("tests"))
   .nativePlatform(scalaVersions = List(scala3, scala213),
     settings = commonJsNativeSettings
   )
+  .dependsOn(saxParser)
 
 // Command aliases for CI:
 
