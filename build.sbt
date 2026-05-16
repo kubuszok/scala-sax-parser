@@ -60,7 +60,16 @@ lazy val root = project
   .settings(noPublishSettings)
   .settings(
     name := "scala-sax-parser-root",
-    logo := s"scala-sax-parser ${version.value}",
+    logo :=
+      s"""scala-sax-parser ${version.value} for ($scala213, $scala3) x (JVM, Scala.js, Scala Native)
+         |
+         |This build uses sbt-projectmatrix:
+         | - Scala JVM adds no suffix to a project name seen in build.sbt
+         | - Scala.js adds the "JS" suffix to a project name seen in build.sbt
+         | - Scala Native adds the "Native" suffix to a project name seen in build.sbt
+         | - Scala 2.13 adds no suffix to a project name seen in build.sbt
+         | - Scala 3 adds the suffix "3" to a project name seen in build.sbt
+         |""".stripMargin,
     usefulTasks := al.usefulTasks()
   )
   .aggregate(saxParser.projectRefs *)
