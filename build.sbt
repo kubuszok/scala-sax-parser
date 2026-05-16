@@ -1,7 +1,5 @@
-import com.jsuereth.sbtpgp.PgpKeys.publishSigned
-
-// Used to publish snapshots to Maven Central.
-val mavenCentralSnapshots = "Maven Central Snapshots" at "https://central.sonatype.com/repository/maven-snapshots"
+import kubuszok.sbt._
+import kubuszok.sbt.KubuszokPlugin.autoImport._
 
 // Versions:
 
@@ -40,70 +38,33 @@ val publishSettings = Seq(
       <url>https://github.com/kubuszok/scala-sax-parser/issues</url>
     </issueManagement>
   ),
-  publishTo := {
-    if (isSnapshot.value) Some(mavenCentralSnapshots)
-    else localStaging.value
-  },
-  publishMavenStyle := true,
-  Test / publishArtifact := false,
-  pomIncludeRepository := {
-    _ => false
-  },
-  versionScheme := Some("early-semver"),
-  git.useGitDescribe := true,
-  git.uncommittedSignifier := None,
-  // Sonatype ignores isSnapshot setting and only looks at -SNAPSHOT suffix in version:
-  //   https://central.sonatype.org/publish/publish-maven/#performing-a-snapshot-deployment
-  // meanwhile sbt-git used to set up SNAPSHOT if there were uncommitted changes:
-  //   https://github.com/sbt/sbt-git/issues/164
-  // (now this suffix is empty by default) so we need to fix it manually.
-  git.gitUncommittedChanges := git.gitCurrentTags.value.isEmpty,
-  git.uncommittedSignifier := Some("SNAPSHOT")
+  projectType := ProjectType.ScalaLibrary
 )
 
 val noPublishSettings =
-  Seq(publish / skip := true, publishArtifact := false)
-
-val versionSchemeSettings = Seq(versionScheme := Some("early-semver"))
+  Seq(projectType := ProjectType.NonPublished)
 
 // Modules:
 
 lazy val root = project
   .in(file("."))
-  .enablePlugins(GitVersioning, GitBranchPrompt)
   .settings(publishSettings)
   .settings(noPublishSettings)
-  .settings(
-    name := "scala-sax-parser-root",
-    git.useGitDescribe := true,
-    commands += Command.command("ci-release") { state =>
-      val extracted = Project.extract(state)
-      val tags = extracted.get(git.gitCurrentTags)
-      val cmd = if (tags.nonEmpty) "publishSigned ; sonaRelease" else "publishSigned"
-      cmd :: state
-    }
-  )
+  .settings(name := "scala-sax-parser-root")
   .aggregate(saxParser.projectRefs *)
   .aggregate(tests.projectRefs *)
 
 lazy val saxParser = (projectMatrix in file("sax-parser"))
-  .enablePlugins(GitVersioning, GitBranchPrompt)
   .settings(
     name := "scala-sax-parser",
     moduleName := "scala-sax-parser"
   )
   .settings(publishSettings)
-  .settings(versionSchemeSettings)
   .jvmPlatform(scalaVersions = scalas)
-  .jsPlatform(scalaVersions = scalas,
-    settings = commonJsNativeSettings
-  )
-  .nativePlatform(scalaVersions = scalas,
-    settings = commonJsNativeSettings
-  )
+  .jsPlatform(scalaVersions = scalas, settings = commonJsNativeSettings)
+  .nativePlatform(scalaVersions = scalas, settings = commonJsNativeSettings)
 
 lazy val tests = (projectMatrix in file("tests"))
-  .enablePlugins(GitVersioning, GitBranchPrompt)
   .settings(
     name := "tests",
     libraryDependencies ++= Seq(
@@ -114,19 +75,6 @@ lazy val tests = (projectMatrix in file("tests"))
   )
   .settings(noPublishSettings)
   .jvmPlatform(scalaVersions = List(scala3, scala213))
-  .jsPlatform(scalaVersions = List(scala3, scala213),
-    settings = commonJsNativeSettings
-  )
-  .nativePlatform(scalaVersions = List(scala3, scala213),
-    settings = commonJsNativeSettings
-  )
+  .jsPlatform(scalaVersions = List(scala3, scala213), settings = commonJsNativeSettings)
+  .nativePlatform(scalaVersions = List(scala3, scala213), settings = commonJsNativeSettings)
   .dependsOn(saxParser)
-
-// Command aliases for CI:
-
-addCommandAlias("ci-jvm-2_13", "clean ; saxParser/compile ; tests/compile ; saxParser/test ; tests/test")
-addCommandAlias("ci-jvm-3", "clean ; saxParser3/compile ; tests3/compile ; saxParser3/test ; tests3/test")
-addCommandAlias("ci-js-2_13", "clean ; saxParserJS/compile ; testsJS/compile ; saxParserJS/test ; testsJS/test")
-addCommandAlias("ci-js-3", "clean ; saxParserJS3/compile ; testsJS3/compile ; saxParserJS3/test ; testsJS3/test")
-addCommandAlias("ci-native-2_13", "clean ; saxParserNative/compile ; testsNative/compile ; saxParserNative/test ; testsNative/test")
-addCommandAlias("ci-native-3", "clean ; saxParserNative3/compile ; testsNative3/compile ; saxParserNative3/test ; testsNative3/test")
