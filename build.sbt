@@ -1,5 +1,6 @@
 import kubuszok.sbt._
 import kubuszok.sbt.KubuszokPlugin.autoImport._
+import sbtwelcome.UsefulTask
 
 // Versions:
 
@@ -46,11 +47,20 @@ val noPublishSettings =
 
 // Modules:
 
+lazy val al = new Aliases(
+  published = Seq(saxParser, tests)
+)
+
 lazy val root = project
   .in(file("."))
+  .enablePlugins(KubuszokRootPlugin)
   .settings(publishSettings)
   .settings(noPublishSettings)
-  .settings(name := "scala-sax-parser-root")
+  .settings(
+    name := "scala-sax-parser-root",
+    logo := s"scala-sax-parser ${version.value}",
+    usefulTasks := al.usefulTasks()
+  )
   .aggregate(saxParser.projectRefs *)
   .aggregate(tests.projectRefs *)
 
