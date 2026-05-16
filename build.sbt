@@ -2,6 +2,8 @@ import kubuszok.sbt._
 import kubuszok.sbt.KubuszokPlugin.autoImport._
 import sbtwelcome.UsefulTask
 
+
+Global / allowUnsafeScalaLibUpgrade := true
 // Versions:
 
 val scala3 = "3.3.5"
