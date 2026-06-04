@@ -6,7 +6,7 @@ import sbtwelcome.UsefulTask
 Global / allowUnsafeScalaLibUpgrade := true
 // Versions:
 
-val scala3 = "3.3.5"
+val scala3 = "3.3.7"
 val scala213 = "2.13.18"
 val scalaXmlVersion = "2.3.0"
 val munitVersion = "1.3.2"
