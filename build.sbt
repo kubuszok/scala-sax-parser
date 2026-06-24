@@ -6,7 +6,7 @@ import kubuszok.sbt.KubuszokPlugin.autoImport._
 Global / allowUnsafeScalaLibUpgrade := true
 // Versions:
 
-val scala3 = "3.3.8"
+val scala3 = "3.8.4"
 val scala213 = "2.13.18"
 val scalaXmlVersion = "2.4.0"
 val munitVersion = "1.3.3"
