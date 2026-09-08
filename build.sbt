@@ -8,7 +8,7 @@ Global / allowUnsafeScalaLibUpgrade := true
 
 val scala3 = "3.3.8"
 val scala213 = "2.13.18"
-val scalaXmlVersion = "2.4.0"
+val scalaXmlVersion = "2.5.0"
 val munitVersion = "1.3.6"
 
 val scalas = List(scala213, scala3)
