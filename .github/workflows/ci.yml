@@ -28,7 +28,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: coursier/cache-action@v8
-      - uses: coursier/setup-action@v3.0.2
+      - uses: coursier/setup-action@v3.0.3
         with:
           jvm: ${{ matrix.jvm }}
           apps: sbt
