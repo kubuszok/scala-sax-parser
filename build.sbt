@@ -76,44 +76,13 @@ lazy val al = new Aliases(
   published = Seq(saxParser, tests)
 )
 
-// CI/test command aliases (e.g. ci-jvm-2_13, test-native-3), consumed by .github/workflows/ci.yml.
-// sbt-welcome used to register these via `usefulTasks`, but it has no sbt 2.0 build, so we register
-// them directly from the Aliases helper bundled with sbt-kubuszok.
-def aliasName(prefix: String, platform: String, scalaBinary: String): String =
-  s"$prefix-${platform.toLowerCase}-${scalaBinary.replace('.', '_')}"
-
-// In sbt 2.0 the `test` task is incremental and machine-wide cached (it behaves like sbt 1.x's
-// `testQuick`), so a CI run that begins with `clean` can still report "No tests to run" and pass
-// vacuously. `testFull` is the uncached full run. Rewrite the generated `<id>/test` steps to
-// `<id>/testFull` so CI always executes the whole suite.
-def fullTests(command: String): String =
-  command
-    .split(";")
-    .map { step =>
-      val trimmed = step.trim
-      if (trimmed.endsWith("/test")) trimmed.stripSuffix("/test") + "/testFull" else trimmed
-    }
-    .mkString(" ; ")
-
-lazy val ciAliases: Seq[Def.Setting[?]] = {
-  val platformNames = List("JVM", "JS", "Native")
-  val scalaBinaries = List("2.13", "3")
-  val perCombination = for {
-    platform <- platformNames
-    scalaBinary <- scalaBinaries
-    setting <-
-      addCommandAlias(aliasName("ci", platform, scalaBinary), fullTests(al.ci(platform, scalaBinary))) ++
-        addCommandAlias(aliasName("test", platform, scalaBinary), fullTests(al.test(platform, scalaBinary)))
-  } yield setting
-  perCombination ++ addCommandAlias("ci-release", al.release)
-}
-
 lazy val root = project
   .in(file("."))
   .enablePlugins(KubuszokRootPlugin)
   .settings(publishSettings)
   .settings(noPublishSettings)
-  .settings(ciAliases)
+  // CI/test command aliases (e.g. ci-jvm-2_13, test-native-3), consumed by .github/workflows/ci.yml.
+  .settings(al.commandAliases())
   .settings(
     name := "scala-sax-parser-root"
   )
