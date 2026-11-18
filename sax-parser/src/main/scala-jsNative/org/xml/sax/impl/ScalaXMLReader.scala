@@ -1,16 +1,14 @@
 package org.xml.sax.impl
 
-import org.xml.sax._
+import org.xml.sax.*
 import org.xml.sax.ext.{DeclHandler, LexicalHandler, Locator2}
 import org.xml.sax.helpers.AttributesImpl
 
 import java.io.{InputStreamReader, Reader, StringReader}
 
-/**
- * A pure-Scala XMLReader implementation that parses XML 1.0 documents
- * and fires SAX events. This enables scala-xml's XMLLoader/FactoryAdapter
- * to work on Scala.js and Scala Native.
- */
+/** A pure-Scala XMLReader implementation that parses XML 1.0 documents and fires SAX events. This enables scala-xml's
+  * XMLLoader/FactoryAdapter to work on Scala.js and Scala Native.
+  */
 class ScalaXMLReader extends XMLReader {
   private var contentHandler: ContentHandler = _
   private var dtdHandler: DTDHandler = _
@@ -25,9 +23,9 @@ class ScalaXMLReader extends XMLReader {
 
   // Entity definitions (populated from DTD internal subset)
   private val entities = scala.collection.mutable.Map[String, String](
-    "amp"  -> "&",
-    "lt"   -> "<",
-    "gt"   -> ">",
+    "amp" -> "&",
+    "lt" -> "<",
+    "gt" -> ">",
     "apos" -> "'",
     "quot" -> "\""
   )
@@ -51,8 +49,8 @@ class ScalaXMLReader extends XMLReader {
 
   // XMLReader interface
   override def getFeature(name: String): Boolean = name match {
-    case "http://xml.org/sax/features/namespaces"        => namespacesFeature
-    case "http://xml.org/sax/features/namespace-prefixes" => namespacePrefixesFeature
+    case "http://xml.org/sax/features/namespaces"                  => namespacesFeature
+    case "http://xml.org/sax/features/namespace-prefixes"          => namespacePrefixesFeature
     case "http://xml.org/sax/features/external-general-entities"   => false
     case "http://xml.org/sax/features/external-parameter-entities" => false
     case "http://xml.org/sax/features/validation"                  => false
@@ -60,20 +58,20 @@ class ScalaXMLReader extends XMLReader {
   }
 
   override def setFeature(name: String, value: Boolean): Unit = name match {
-    case "http://xml.org/sax/features/namespaces"        => namespacesFeature = value
-    case "http://xml.org/sax/features/namespace-prefixes" => namespacePrefixesFeature = value
-    case "http://xml.org/sax/features/external-general-entities"   => ()
-    case "http://xml.org/sax/features/external-parameter-entities" => ()
-    case "http://xml.org/sax/features/validation"                  => ()
+    case "http://xml.org/sax/features/namespaces"                         => namespacesFeature = value
+    case "http://xml.org/sax/features/namespace-prefixes"                 => namespacePrefixesFeature = value
+    case "http://xml.org/sax/features/external-general-entities"          => ()
+    case "http://xml.org/sax/features/external-parameter-entities"        => ()
+    case "http://xml.org/sax/features/validation"                         => ()
     case "http://apache.org/xml/features/nonvalidating/load-external-dtd" => ()
-    case "http://apache.org/xml/features/disallow-doctype-decl"    => ()
+    case "http://apache.org/xml/features/disallow-doctype-decl"           => ()
     case _ => throw new SAXNotRecognizedException(s"Feature: $name")
   }
 
   override def getProperty(name: String): AnyRef = name match {
-    case "http://xml.org/sax/properties/lexical-handler"      => lexicalHandler
-    case "http://xml.org/sax/properties/declaration-handler"  => declHandler
-    case _ => throw new SAXNotRecognizedException(s"Property: $name")
+    case "http://xml.org/sax/properties/lexical-handler"     => lexicalHandler
+    case "http://xml.org/sax/properties/declaration-handler" => declHandler
+    case _                                                   => throw new SAXNotRecognizedException(s"Property: $name")
   }
 
   override def setProperty(name: String, value: AnyRef): Unit = name match {
@@ -123,7 +121,7 @@ class ScalaXMLReader extends XMLReader {
     }
 
     // Skip BOM if present
-    if (current == 0xFEFF) advance()
+    if (current == 0xfeff) advance()
 
     // Handle optional XML declaration
     skipXmlDeclaration()
@@ -175,8 +173,8 @@ class ScalaXMLReader extends XMLReader {
     }
   }
 
-  private def parseMiscAndElement(nsCtx: NamespaceContext): Unit = {
-    while (current != -1) {
+  private def parseMiscAndElement(nsCtx: NamespaceContext): Unit =
+    while (current != -1)
       if (current == '<') {
         advance() // consumed '<'
         handleAfterLt(nsCtx)
@@ -185,11 +183,9 @@ class ScalaXMLReader extends XMLReader {
       } else {
         parseCharData()
       }
-    }
-  }
 
   /** Called after '<' has been consumed. current is the character after '<'. */
-  private def handleAfterLt(nsCtx: NamespaceContext): Unit = {
+  private def handleAfterLt(nsCtx: NamespaceContext): Unit =
     if (current == '?') {
       advance()
       parsePi()
@@ -203,7 +199,6 @@ class ScalaXMLReader extends XMLReader {
       // Element — current is the first char of the element name
       parseElement(nsCtx)
     }
-  }
 
   // ---- Element parsing ----
 
@@ -244,9 +239,8 @@ class ScalaXMLReader extends XMLReader {
 
     // Fire startPrefixMapping events
     if (contentHandler != null) {
-      for ((prefix, uri) <- newPrefixes) {
+      for ((prefix, uri) <- newPrefixes)
         contentHandler.startPrefixMapping(prefix, uri)
-      }
     }
 
     // Resolve element namespace
@@ -292,8 +286,13 @@ class ScalaXMLReader extends XMLReader {
     nsCtx.popPrefixes(newPrefixes.size)
   }
 
-  private def parseElementContent(nsCtx: NamespaceContext, elemUri: String, elemLocalName: String, elemQName: String): Unit = {
-    while (current != -1) {
+  private def parseElementContent(
+      nsCtx: NamespaceContext,
+      elemUri: String,
+      elemLocalName: String,
+      elemQName: String
+  ): Unit = {
+    while (current != -1)
       if (current == '<') {
         advance() // consumed '<'
         if (current == '/') {
@@ -315,17 +314,14 @@ class ScalaXMLReader extends XMLReader {
       } else {
         parseCharData()
       }
-    }
     fatalError(s"Unexpected end of input in element '$elemQName'")
   }
 
-  private def fireEndPrefixMappings(prefixes: scala.collection.mutable.ListBuffer[(String, String)]): Unit = {
+  private def fireEndPrefixMappings(prefixes: scala.collection.mutable.ListBuffer[(String, String)]): Unit =
     if (contentHandler != null) {
-      for ((prefix, _) <- prefixes.reverse) {
+      for ((prefix, _) <- prefixes.reverse)
         contentHandler.endPrefixMapping(prefix)
-      }
     }
-  }
 
   // ---- End tag (standalone, used from handleAfterLt at top level) ----
 
@@ -353,7 +349,7 @@ class ScalaXMLReader extends XMLReader {
     }
   }
 
-  private def parseMarkupDecl(nsCtx: NamespaceContext): Unit = {
+  private def parseMarkupDecl(nsCtx: NamespaceContext): Unit =
     if (current == '-') {
       advance()
       expect('-')
@@ -368,7 +364,6 @@ class ScalaXMLReader extends XMLReader {
     } else {
       fatalError(s"Unexpected markup declaration character: '${current.toChar}'")
     }
-  }
 
   private def parseComment(): Unit = {
     val sb = new StringBuilder
@@ -577,7 +572,7 @@ class ScalaXMLReader extends XMLReader {
     if (current == '>') advance()
   }
 
-  private def readAttType(): String = {
+  private def readAttType(): String =
     if (current == '(') {
       val sb = new StringBuilder("(")
       advance()
@@ -597,9 +592,8 @@ class ScalaXMLReader extends XMLReader {
         sb.toString
       } else name
     }
-  }
 
-  private def readAttDefault(): (String, String) = {
+  private def readAttDefault(): (String, String) =
     if (current == '#') {
       advance()
       val keyword = readName()
@@ -614,7 +608,6 @@ class ScalaXMLReader extends XMLReader {
     } else {
       (null, null)
     }
-  }
 
   private def parseDtdNotation(): Unit = {
     skipWhitespace()
@@ -740,7 +733,7 @@ class ScalaXMLReader extends XMLReader {
     sb.toString
   }
 
-  private def isNameStartChar(c: Char): Boolean = {
+  private def isNameStartChar(c: Char): Boolean =
     c == ':' || c == '_' ||
       (c >= 'A' && c <= 'Z') ||
       (c >= 'a' && c <= 'z') ||
@@ -755,21 +748,18 @@ class ScalaXMLReader extends XMLReader {
       (c >= '\u3001' && c <= '\uD7FF') ||
       (c >= '\uF900' && c <= '\uFDCF') ||
       (c >= '\uFDF0' && c <= '\uFFFD')
-  }
 
-  private def isNameChar(c: Char): Boolean = {
+  private def isNameChar(c: Char): Boolean =
     isNameStartChar(c) ||
       c == '-' || c == '.' ||
       (c >= '0' && c <= '9') ||
       c == '\u00B7' ||
       (c >= '\u0300' && c <= '\u036F') ||
       (c >= '\u203F' && c <= '\u2040')
-  }
 
-  private def skipWhitespace(): Unit = {
+  private def skipWhitespace(): Unit =
     while (current != -1 && (current == ' ' || current == '\t' || current == '\n' || current == '\r'))
       advance()
-  }
 
   private def expect(ch: Char): Unit = {
     if (current != ch.toInt)
@@ -777,13 +767,14 @@ class ScalaXMLReader extends XMLReader {
     advance()
   }
 
-  private def expectString(s: String): Unit = {
+  private def expectString(s: String): Unit =
     for (ch <- s) {
       if (current != ch.toInt)
-        fatalError(s"Expected '$s' but got unexpected character '${if (current == -1) "EOF" else current.toChar.toString}'")
+        fatalError(
+          s"Expected '$s' but got unexpected character '${if (current == -1) "EOF" else current.toChar.toString}'"
+        )
       advance()
     }
-  }
 
   private def readQuotedValue(): String = {
     val quote = current
@@ -791,7 +782,7 @@ class ScalaXMLReader extends XMLReader {
       fatalError(s"Expected quote character but got '${if (current == -1) "EOF" else current.toChar.toString}'")
     advance()
     val sb = new StringBuilder
-    while (current != -1 && current != quote) {
+    while (current != -1 && current != quote)
       if (current == '&') {
         advance()
         if (current == '#') {
@@ -810,7 +801,6 @@ class ScalaXMLReader extends XMLReader {
         sb.append(current.toChar)
         advance()
       }
-    }
     advance() // skip closing quote
     sb.toString
   }

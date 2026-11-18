@@ -2,7 +2,7 @@ package scalasaxparser
 
 import munit.FunSuite
 import javax.xml.parsers.SAXParserFactory
-import org.xml.sax._
+import org.xml.sax.*
 import org.xml.sax.ext.LexicalHandler
 import org.xml.sax.helpers.DefaultHandler
 
@@ -161,9 +161,8 @@ class SAXParserSpecTest extends FunSuite {
     var capturedUri: String = null
 
     val handler = new DefaultHandler() {
-      override def startElement(uri: String, localName: String, qName: String, atts: Attributes): Unit = {
+      override def startElement(uri: String, localName: String, qName: String, atts: Attributes): Unit =
         if (localName == "child" || qName == "ns:child") capturedUri = uri
-      }
     }
 
     val xml = """<root xmlns:ns="http://example.com"><ns:child/></root>"""

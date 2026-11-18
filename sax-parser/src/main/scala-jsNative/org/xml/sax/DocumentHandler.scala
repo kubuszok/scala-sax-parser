@@ -1,9 +1,7 @@
 package org.xml.sax
 
-/**
- * Deprecated SAX1 DocumentHandler interface.
- * Included for compatibility with the deprecated Parser interface.
- */
+/** Deprecated SAX1 DocumentHandler interface. Included for compatibility with the deprecated Parser interface.
+  */
 @deprecated("Use ContentHandler instead", "SAX 2.0")
 trait DocumentHandler {
   def setDocumentLocator(locator: Locator): Unit

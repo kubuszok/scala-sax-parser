@@ -1,12 +1,8 @@
 package org.xml.sax.helpers
 
-import org.xml.sax._
+import org.xml.sax.*
 
-class DefaultHandler
-    extends ContentHandler
-    with DTDHandler
-    with EntityResolver
-    with ErrorHandler {
+class DefaultHandler extends ContentHandler with DTDHandler with EntityResolver with ErrorHandler {
 
   // EntityResolver
   override def resolveEntity(publicId: String, systemId: String): InputSource = null

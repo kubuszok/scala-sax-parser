@@ -2,7 +2,7 @@ package scalasaxparser
 
 import munit.FunSuite
 
-import scala.xml._
+import scala.xml.*
 
 class NamespaceTest extends FunSuite {
 
@@ -19,9 +19,9 @@ class NamespaceTest extends FunSuite {
 
   test("parse multiple namespaces") {
     val xml = """<root xmlns:a="http://a.com" xmlns:b="http://b.com">
-      |  <a:child/>
-      |  <b:child/>
-      |</root>""".stripMargin
+                |  <a:child/>
+                |  <b:child/>
+                |</root>""".stripMargin
     val elem = XML.loadString(xml)
     val children = elem.child.collect { case e: Elem => e }
     assertEquals(children(0).prefix, "a")
