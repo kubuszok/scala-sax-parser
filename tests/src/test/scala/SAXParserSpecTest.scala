@@ -2,7 +2,7 @@ package scalasaxparser
 
 import munit.FunSuite
 import javax.xml.parsers.SAXParserFactory
-import org.xml.sax.*
+import org.xml.sax._
 import org.xml.sax.ext.LexicalHandler
 import org.xml.sax.helpers.DefaultHandler
 
