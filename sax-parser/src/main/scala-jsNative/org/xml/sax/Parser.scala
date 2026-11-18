@@ -1,9 +1,8 @@
 package org.xml.sax
 
-/**
- * Deprecated SAX1 Parser interface. Included for compatibility with
- * javax.xml.parsers.SAXParser which declares getParser().
- */
+/** Deprecated SAX1 Parser interface. Included for compatibility with javax.xml.parsers.SAXParser which declares
+  * getParser().
+  */
 @deprecated("Use XMLReader instead", "SAX 2.0")
 trait Parser {
   def setLocale(locale: java.util.Locale): Unit

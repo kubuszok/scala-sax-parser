@@ -2,7 +2,6 @@ import commandmatrix.extra._
 import kubuszok.sbt._
 import kubuszok.sbt.KubuszokPlugin.autoImport._
 
-
 Global / allowUnsafeScalaLibUpgrade := true
 // Versions:
 

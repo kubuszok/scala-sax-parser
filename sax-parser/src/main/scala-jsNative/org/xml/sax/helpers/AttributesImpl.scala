@@ -66,9 +66,8 @@ class AttributesImpl() extends Attributes {
     if (idx >= 0) data(idx * 5 + 4) else null
   }
 
-  def clear(): Unit = {
+  def clear(): Unit =
     length_ = 0
-  }
 
   def setAttributes(atts: Attributes): Unit = {
     clear()
@@ -151,11 +150,10 @@ class AttributesImpl() extends Attributes {
     data(index * 5 + 4) = value
   }
 
-  private def ensureCapacity(n: Int): Unit = {
+  private def ensureCapacity(n: Int): Unit =
     if (n * 5 > data.length) {
       val newData = new Array[String](Math.max(data.length * 2, n * 5))
       System.arraycopy(data, 0, newData, 0, length_ * 5)
       data = newData
     }
-  }
 }

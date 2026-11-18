@@ -1,7 +1,7 @@
 package scalasaxparser
 
 import munit.FunSuite
-import org.xml.sax._
+import org.xml.sax.*
 import org.xml.sax.ext.LexicalHandler
 import org.xml.sax.helpers.DefaultHandler
 import javax.xml.parsers.SAXParserFactory
@@ -167,9 +167,8 @@ class ContentHandlerEventsTest extends FunSuite {
     var capturedAtts: Attributes = null
 
     reader.setContentHandler(new DefaultHandler() {
-      override def startElement(uri: String, localName: String, qName: String, atts: Attributes): Unit = {
+      override def startElement(uri: String, localName: String, qName: String, atts: Attributes): Unit =
         capturedAtts = new org.xml.sax.helpers.AttributesImpl(atts)
-      }
     })
 
     reader.parse(new InputSource(new StringReader(xml)))
@@ -305,13 +304,12 @@ class ContentHandlerEventsTest extends FunSuite {
     var capturedQName: String = null
 
     reader.setContentHandler(new DefaultHandler() {
-      override def startElement(uri: String, localName: String, qName: String, atts: Attributes): Unit = {
+      override def startElement(uri: String, localName: String, qName: String, atts: Attributes): Unit =
         if (qName == "ns:item") {
           capturedUri = uri
           capturedLocalName = localName
           capturedQName = qName
         }
-      }
     })
 
     reader.parse(new InputSource(new StringReader(xml)))
@@ -327,9 +325,8 @@ class ContentHandlerEventsTest extends FunSuite {
     var capturedAtts: Attributes = null
 
     reader.setContentHandler(new DefaultHandler() {
-      override def startElement(uri: String, localName: String, qName: String, atts: Attributes): Unit = {
+      override def startElement(uri: String, localName: String, qName: String, atts: Attributes): Unit =
         capturedAtts = new org.xml.sax.helpers.AttributesImpl(atts)
-      }
     })
 
     reader.parse(new InputSource(new StringReader(xml)))

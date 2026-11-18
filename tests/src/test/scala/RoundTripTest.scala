@@ -2,7 +2,7 @@ package scalasaxparser
 
 import munit.FunSuite
 
-import scala.xml._
+import scala.xml.*
 
 class RoundTripTest extends FunSuite {
 
@@ -58,17 +58,17 @@ class RoundTripTest extends FunSuite {
 
   test("roundtrip complex document") {
     val xml = """<library>
-      |  <book id="1" lang="en">
-      |    <title>Scala Programming</title>
-      |    <author>Odersky</author>
-      |    <year>2021</year>
-      |  </book>
-      |  <book id="2" lang="en">
-      |    <title>FP in Scala</title>
-      |    <author>Chiusano</author>
-      |    <year>2020</year>
-      |  </book>
-      |</library>""".stripMargin
+                |  <book id="1" lang="en">
+                |    <title>Scala Programming</title>
+                |    <author>Odersky</author>
+                |    <year>2021</year>
+                |  </book>
+                |  <book id="2" lang="en">
+                |    <title>FP in Scala</title>
+                |    <author>Chiusano</author>
+                |    <year>2020</year>
+                |  </book>
+                |</library>""".stripMargin
     val parsed1 = XML.loadString(xml)
     val serialized = parsed1.toString
     val parsed2 = XML.loadString(serialized)

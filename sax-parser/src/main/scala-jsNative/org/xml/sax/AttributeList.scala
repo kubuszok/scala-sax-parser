@@ -1,9 +1,7 @@
 package org.xml.sax
 
-/**
- * Deprecated SAX1 AttributeList interface.
- * Included for compatibility with the deprecated DocumentHandler interface.
- */
+/** Deprecated SAX1 AttributeList interface. Included for compatibility with the deprecated DocumentHandler interface.
+  */
 @deprecated("Use Attributes instead", "SAX 2.0")
 trait AttributeList {
   def getLength(): Int

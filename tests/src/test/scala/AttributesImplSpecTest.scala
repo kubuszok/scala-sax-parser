@@ -349,9 +349,8 @@ class AttributesImplSpecTest extends FunSuite {
 
   test("adding many attributes grows internal storage") {
     val atts = new AttributesImpl()
-    for (i <- 0 until 20) {
+    for (i <- 0 until 20)
       atts.addAttribute("", s"attr$i", s"attr$i", "CDATA", s"val$i")
-    }
     assertEquals(atts.getLength(), 20)
     assertEquals(atts.getValue(19), "val19")
     assertEquals(atts.getQName(0), "attr0")

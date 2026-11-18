@@ -2,9 +2,9 @@ package scalasaxparser
 
 import munit.FunSuite
 
-import scala.xml._
+import scala.xml.*
 import scala.xml.factory.XMLLoader
-import javax.xml.parsers.{SAXParser => JSAXParser, SAXParserFactory}
+import javax.xml.parsers.{SAXParser as JSAXParser, SAXParserFactory}
 
 class ParsingTest extends FunSuite {
 
@@ -102,10 +102,10 @@ class ParsingTest extends FunSuite {
 
   test("parse with DTD internal subset - entity") {
     val xml = """<?xml version="1.0"?>
-      |<!DOCTYPE root [
-      |  <!ENTITY greeting "Hello World">
-      |]>
-      |<root>&greeting;</root>""".stripMargin
+                |<!DOCTYPE root [
+                |  <!ENTITY greeting "Hello World">
+                |]>
+                |<root>&greeting;</root>""".stripMargin
     val elem = xmlWithDtd.loadString(xml)
     assertEquals(elem.text, "Hello World")
   }

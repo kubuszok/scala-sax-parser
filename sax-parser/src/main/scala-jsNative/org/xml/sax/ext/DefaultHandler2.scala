@@ -3,11 +3,7 @@ package org.xml.sax.ext
 import org.xml.sax.{InputSource, SAXException}
 import org.xml.sax.helpers.DefaultHandler
 
-class DefaultHandler2
-    extends DefaultHandler
-    with LexicalHandler
-    with DeclHandler
-    with EntityResolver2 {
+class DefaultHandler2 extends DefaultHandler with LexicalHandler with DeclHandler with EntityResolver2 {
 
   // LexicalHandler
   override def startDTD(name: String, publicId: String, systemId: String): Unit = ()

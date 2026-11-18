@@ -2,7 +2,7 @@ package scalasaxparser
 
 import munit.FunSuite
 
-import scala.xml._
+import scala.xml.*
 
 class AttributeTest extends FunSuite {
 
