@@ -73,7 +73,8 @@ val noPublishSettings =
 // Modules:
 
 lazy val al = new Aliases(
-  published = Seq(saxParser, tests)
+  published = Seq(saxParser),
+  testOnly = Seq(tests)
 )
 
 lazy val root = project
