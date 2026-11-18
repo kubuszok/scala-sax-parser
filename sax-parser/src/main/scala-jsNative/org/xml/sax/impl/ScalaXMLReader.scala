@@ -1,6 +1,6 @@
 package org.xml.sax.impl
 
-import org.xml.sax.*
+import org.xml.sax._
 import org.xml.sax.ext.{DeclHandler, LexicalHandler, Locator2}
 import org.xml.sax.helpers.AttributesImpl
 

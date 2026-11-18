@@ -1,6 +1,6 @@
 package org.xml.sax.helpers
 
-import org.xml.sax.*
+import org.xml.sax._
 
 class DefaultHandler extends ContentHandler with DTDHandler with EntityResolver with ErrorHandler {
 

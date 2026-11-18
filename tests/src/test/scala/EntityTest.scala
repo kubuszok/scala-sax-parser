@@ -2,9 +2,9 @@ package scalasaxparser
 
 import munit.FunSuite
 
-import scala.xml.*
+import scala.xml._
 import scala.xml.factory.XMLLoader
-import javax.xml.parsers.{SAXParser as JSAXParser, SAXParserFactory}
+import javax.xml.parsers.{SAXParser => JSAXParser, SAXParserFactory}
 
 class EntityTest extends FunSuite {
 

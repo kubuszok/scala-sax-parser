@@ -2,7 +2,7 @@ package scalasaxparser
 
 import munit.FunSuite
 
-import scala.xml.*
+import scala.xml._
 
 class RoundTripTest extends FunSuite {
 
