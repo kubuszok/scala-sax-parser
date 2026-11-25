@@ -24,7 +24,7 @@ lazy val commonJsNativeSettings = Seq(
 //
 //  - JDK 26+ future-proofing: on Scala 3.3.x, JVM only, enable -Yfuture-lazy-vals (the JDK-9+
 //    lazy-vals encoding). It requires -java-output-version >= 9, so we also pin output to 17.
-//    Never applied on Scala 2.13, and never on JS/Native (Scala Native 0.5.12 crashes on this flag).
+//    Never applied on Scala 2.13, and never on JS/Native (Scala Native 0.5.13 crashes on this flag).
 //  - JS/Native shared sources: add the scala-jsNative source directory for both non-JVM platforms.
 lazy val matrixActions = Seq(
   MatrixAction
